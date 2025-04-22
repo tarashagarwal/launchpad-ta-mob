@@ -2,10 +2,12 @@ import { HelloWave } from "@/components/HelloWave";
 import ParallaxScrollView from "@/components/ParallaxScrollView";
 import { ThemedText } from "@/components/ThemedText";
 import { ThemedView } from "@/components/ThemedView";
+import { Colors } from "@/constants/Colors";
 import { Link } from "expo-router";
-import { Image, Platform, StyleSheet } from "react-native";
+import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
 
 export default function HomeScreen() {
+  const theme = useColorScheme() ?? "light";
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -56,7 +58,13 @@ export default function HomeScreen() {
       </ThemedView>
       <ThemedView style={styles.stepContainer}>
         <ThemedText type="subtitle">Navigation</ThemedText>
-        <Link href="/about" style={styles.button}>
+        <Link
+          href="/about"
+          style={[
+            styles.button,
+            { color: theme === "light" ? Colors.light.text : Colors.dark.text },
+          ]}
+        >
           Go to About screen
         </Link>
       </ThemedView>
@@ -84,6 +92,5 @@ const styles = StyleSheet.create({
   button: {
     fontSize: 20,
     textDecorationLine: "underline",
-    color: "#000",
   },
 });
