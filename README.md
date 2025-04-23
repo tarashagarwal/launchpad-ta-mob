@@ -20,6 +20,10 @@ To get started, ensure you have the following installed and configured:
     ```bash
     eas init
     ```
+
+You can refer below image for further steps:
+<img width="705" alt="image" src="https://github.com/user-attachments/assets/64b0d111-3372-4264-8753-1589906b8e53" />
+
 * **Login to EAS:** Log in to your EAS account in the terminal using the command:
     ```bash
     eas login
