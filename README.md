@@ -2,6 +2,18 @@
 
 This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
 
+## Prerequisite
+We'll need the following to get started:
+
+ - Expo Go installed on a physical device, Please take reference from this link https://expo.dev/go to install expo go app. 
+ - Node.js (LTS version) installed, You can download and install Node latest verison with this link https://nodejs.org/en 
+ - VS Code or any other preferred code editor or IDE installed
+ - A macOS, Linux, or Windows (PowerShell and WSL2) with a terminal window open
+ - EAS account, if you don't have account please ctrate with https://expo.dev/signup.
+ - Install eas-cli with this command (npm install -g eas-cli)
+ - Login into your EAS account, type this commend (eas login) in the terminal, Enter your email or username and password. 
+ - We have used Node version 22.2.0, NPM version - 10.8.1
+
 ## Get started
 
 1. Install dependencies
@@ -15,36 +27,9 @@ This is an [Expo](https://expo.dev) project created with [`create-expo-app`](htt
    ```bash
     npx expo start
    ```
+3. Switch to expo go app by pressing 'S' key. You can see a message like Using "Expo Go"
+<img width="660" alt="image" src="https://github.com/user-attachments/assets/37ae0b38-c971-4170-bb94-5325f70231a1" />
 
-In the output, you'll find options to open the app in a
+4. Scan that QR code to open the app on the device. On Android, use the Expo Go > Scan QR code option. On iOS, use the default camera app.
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
-
-You can start developing by editing the files inside the **app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
-
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **app-example** directory and create a blank **app** directory where you can start developing.
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+Good Luck!
