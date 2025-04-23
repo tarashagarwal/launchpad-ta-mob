@@ -13,21 +13,23 @@ To get started, ensure you have the following installed and configured:
 * **Operating System:** macOS, Linux, or Windows (with PowerShell and WSL2 recommended for a smoother experience). Ensure you have a terminal window open.
 * **EAS Account:** If you don't have an Expo Application Services (EAS) account, create one at [https://expo.dev/signup](https://expo.dev/signup). This is required for building and deploying your app.
 * **EAS CLI:** Install the EAS command-line interface globally using the following command:
+
     ```bash
     npm install -g eas-cli
     ```
 * **Initialize EAS:** Navigate to your project directory in the terminal and run the following command to initialize and link your project to EAS:
+
     ```bash
     eas init
     ```
 
-You can refer below image for further steps:
-<img width="705" alt="image" src="https://github.com/user-attachments/assets/64b0d111-3372-4264-8753-1589906b8e53" />
-
+    You can refer to this link for further steps: [https://docs.expo.dev/tutorial/eas/configure-development-build/](https://docs.expo.dev/tutorial/eas/configure-development-build/)
 * **Login to EAS:** Log in to your EAS account in the terminal using the command:
+
     ```bash
     eas login
     ```
+
     Enter your email or username and password when prompted.
 
 ## Getting Started
@@ -35,11 +37,13 @@ You can refer below image for further steps:
 Follow these steps to run your Expo app:
 
 1.  **Install Dependencies:** Navigate to your project directory in the terminal and install the required npm packages:
+
     ```bash
     npm install
     ```
 
 2.  **Start the App:** Start the Expo development server:
+
     ```bash
     npx expo start
     ```
