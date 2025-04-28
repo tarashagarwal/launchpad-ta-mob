@@ -1,96 +1,157 @@
-import { HelloWave } from "@/components/HelloWave";
-import ParallaxScrollView from "@/components/ParallaxScrollView";
-import { ThemedText } from "@/components/ThemedText";
-import { ThemedView } from "@/components/ThemedView";
-import { Colors } from "@/constants/Colors";
-import { Link } from "expo-router";
-import { Image, Platform, StyleSheet, useColorScheme } from "react-native";
+import * as ImagePicker from "expo-image-picker";
+import React, { useEffect, useState } from "react";
+import {
+  Button,
+  Image,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View
+} from "react-native";
 
-export default function HomeScreen() {
-  const theme = useColorScheme() ?? "light";
+const PUBLIC_BUCKET_URL = "https://coltie-uploads.s3.amazonaws.com/uploads/";
+
+export default function NoticeDetailCard() {
+  const [notice, setNotice] = useState<any>(null);
+  const [editMode, setEditMode] = useState(false);
+  const [isChanged, setIsChanged] = useState(false);
+
+  useEffect(() => {
+    mockNotice();
+  }, []);
+
+  function mockNotice() {
+    const dummyNotice = {
+      id: "notice-4",
+      title: "Mocked Notice Title",
+      description: "This is a mocked description for testing purpose.",
+      attachments: [
+        {
+          id: "file-1",
+          fileName: "example-image.jpg",
+          type: "image/jpeg",
+          url: `${PUBLIC_BUCKET_URL}notice-4/example-image.jpg`,
+        },
+        {
+          id: "file-2",
+          fileName: "example-pdf.pdf",
+          type: "application/pdf",
+          url: `${PUBLIC_BUCKET_URL}notice-4/example-pdf.pdf`,
+        },
+      ],
+    };
+    setNotice(dummyNotice);
+  }
+
+  function handleTitleChange(text: string) {
+    setNotice((prev: any) => ({ ...prev, title: text }));
+    setIsChanged(true);
+  }
+
+  function handleDescriptionChange(text: string) {
+    setNotice((prev: any) => ({ ...prev, description: text }));
+    setIsChanged(true);
+  }
+
+  async function handleAttachmentUpload() {
+    const permissionResult = await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      alert("Permission to access camera roll is required!");
+      return;
+    }
+
+    const pickerResult = await ImagePicker.launchImageLibraryAsync({ mediaTypes: ImagePicker.MediaTypeOptions.All, base64: false });
+    if (!pickerResult.canceled && pickerResult.assets.length > 0) {
+      const file = pickerResult.assets[0];
+      const newAttachment = {
+        id: `attach-${Date.now()}`,
+        url: file.uri,
+        type: file.type || "image",
+        file: file,
+        name: file.fileName || file.uri.split('/').pop(),
+      };
+      setNotice((prev: any) => ({
+        ...prev,
+        attachments: [...(prev.attachments || []), newAttachment],
+      }));
+      setIsChanged(true);
+    }
+  }
+
+  function handleSave() {
+    alert("Saved locally! (No server)");
+    setIsChanged(false);
+    setEditMode(false);
+  }
+
+  if (!notice) {
+    return <Text style={{ textAlign: "center", marginTop: 50 }}>Loading Mocked Notice...</Text>;
+  }
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
+    <ScrollView style={styles.container}>
+      {/* Title */}
+      {editMode ? (
+        <TextInput
+          value={notice.title}
+          onChangeText={handleTitleChange}
+          style={styles.titleInput}
+          placeholder="Title"
         />
-      }
-    >
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          Tap the Explore tab to learn more about what's included in this
-          starter app.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          When you're ready, run{" "}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Navigation</ThemedText>
-        <Link
-          href="/about"
-          style={[
-            styles.button,
-            { color: theme === "light" ? Colors.light.text : Colors.dark.text },
-          ]}
-        >
-          Go to About screen
-        </Link>
-      </ThemedView>
-    </ParallaxScrollView>
+      ) : (
+        <Text style={styles.title}>{notice.title}</Text>
+      )}
+
+      {/* Description */}
+      {editMode ? (
+        <TextInput
+          value={notice.description}
+          onChangeText={handleDescriptionChange}
+          style={styles.descriptionInput}
+          placeholder="Description"
+          multiline
+        />
+      ) : (
+        <Text style={styles.description}>{notice.description}</Text>
+      )}
+
+      {/* Attachments */}
+      <View style={styles.attachmentsContainer}>
+        {notice.attachments && notice.attachments.map((att: any) => (
+          <View key={att.id} style={styles.attachmentBox}>
+            {att.type.startsWith("image") ? (
+              <Image source={{ uri: att.url }} style={styles.image} />
+            ) : (
+              <Text style={styles.fileName}>{att.fileName}</Text>
+            )}
+          </View>
+        ))}
+      </View>
+
+      {/* Buttons */}
+      <View style={styles.buttonRow}>
+        <Button title={editMode ? "Cancel" : "Edit"} onPress={() => setEditMode(!editMode)} />
+        {editMode && (
+          <>
+            <Button title="Upload Attachment" onPress={handleAttachmentUpload} />
+            <Button title="Save" onPress={handleSave} disabled={!isChanged} />
+          </>
+        )}
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-  },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
-  button: {
-    fontSize: 20,
-    textDecorationLine: "underline",
-  },
+  container: { padding: 16 },
+  title: { fontSize: 24, fontWeight: "bold", marginBottom: 10 },
+  titleInput: { fontSize: 24, fontWeight: "bold", marginBottom: 10, borderBottomWidth: 1 },
+  description: { fontSize: 16, marginBottom: 10 },
+  descriptionInput: { fontSize: 16, marginBottom: 10, height: 100, borderWidth: 1, padding: 8 },
+  attachmentsContainer: { flexDirection: "row", flexWrap: "wrap", gap: 10, marginTop: 10 },
+  attachmentBox: { width: 100, height: 100, backgroundColor: "#eee", justifyContent: "center", alignItems: "center" },
+  image: { width: 100, height: 100, borderRadius: 8 },
+  fileName: { fontSize: 12, textAlign: "center" },
+  buttonRow: { marginTop: 20, flexDirection: "column", gap: 10 },
 });
